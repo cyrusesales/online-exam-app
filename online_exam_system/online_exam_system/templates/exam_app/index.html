@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Online Exam System{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-4 rounded mb-4">
+    <h1 class="display-4">Welcome to the Online Exam System</h1>
+    <p class="lead">Take exams, test your knowledge, and track your progress.</p>
+    {% if not user.is_authenticated %}
+        <hr class="my-4">
+        <p>Get started by logging in or creating a new account.</p>
+        <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Login</a>
+        <a class="btn btn-outline-primary btn-lg" href="{% url 'register' %}" role="button">Register</a>
+    {% endif %}
+</div>
+
+{% if user.is_authenticated %}
+    <h2 class="mb-4">Available Exams</h2>
+    <div class="row">
+        {% if exams %}
+            {% for exam in exams %}
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="card-title mb-0">{{ exam.title }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">{{ exam.description|truncatewords:20 }}</p>
+                            <p><strong>Category:</strong> {{ exam.category.name }}</p>
+                            <p><strong>Time Limit:</strong> {{ exam.time_limit_minutes }} minutes</p>
+                            <a href="{% url 'take_exam' exam.id %}" class="btn btn-primary">Take Exam</a>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Created by: {{ exam.created_by.username }} on {{ exam.created_at|date:"F d, Y"}}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No exams available at the moment. Check back later or create your own!
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <h2 class="mb-4 mt-5">Exam Categories</h2>
+    <div class="row">
+        {% if categories %}
+            {% for category in categories %}
+                <div class="col-md-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ category.name }}</h5>
+                            <p class="card-text">{{ category.description|default:"No description"|truncatewords:10 }}</p>
+                            <p><strong>Exams:</strong> {{ category.exams.count }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No categories available yet. <a href="{% url 'add_category' %}">Create one</a>!
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}
