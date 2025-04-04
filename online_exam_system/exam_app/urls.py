@@ -10,7 +10,7 @@ urlpatterns = [
 
     # Category URLs
     path('categories/', views.CategoryListView.as_view(), name='categories'),
-    path('categories/add/', views.CategoryCreateView.as_view(), name='add_categories'),
+    path('categories/add/', views.CategoryCreateView.as_view(), name='add_category'),
 
     # Exam URLs
     path('exam/add/', views.ExamCreateView.as_view(), name='add_exam'),
