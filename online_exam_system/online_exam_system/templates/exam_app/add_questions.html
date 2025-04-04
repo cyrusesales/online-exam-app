@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Add Questions{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Add Questions to "{{ exam.title }}"</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <h4>Question</h4>
+                    {{ question_form|crispy }}
+
+                    <h4>Choices</h4>
+                    <p class="text-muted">Mark at least one choice as correct.</p>
+                    {{ choice_formset.management_form }}
+
+                    {% for choice_form in choice_formset %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        {{ choice_form.text|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-3">
+                                        {{ choice_form.is_correct|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="mt-3">
+                        <button type="submit" name="add_another" class="btn btn-primary">Save & Add Another</button>
+                        <button type="submit" class="btn btn-success">Save & Finish</button>
+                        <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Simple client-side validation to ensure at least one option is marked as correct.
+    document.querySelector('form').addEventListener('submit', function(e) {
+        let hasCorrectAnswer = false;
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name$="-is_correct"]');
+
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                hasCorrectAnswer = true;
+            }
+        });
+
+        if (!hasCorrectAnswer) {
+            e.preventDefault();
+            alert('Please mark at least one option as correct!');
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}
