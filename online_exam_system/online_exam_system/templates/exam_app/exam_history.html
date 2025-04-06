@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Exam History{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Your Exam History</h1>
+
+{% if attempts %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Exam</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Timer Taken</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in attempts %}
+                    <tr>
+                        <td>{{ attempt.exam.title }}</td>
+                        <td>{{ attempt.exam.category.name }}</td>
+                        <td>{{ attempt.started_at|date:"M d, Y, H:i" }}</td>
+                        <td>
+                            {% if attempt.is_completed %}
+                                {{ attempt.time_taken_minutes }} minutes
+                            {% else %}
+                                In progress
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if attempt.is_completed %}
+                                <span class="badge {% if attempt.score >= 70 %}bg-success{% elif attempt.score >= 50 %}bg-warning{% else %}bg-danger{% endif %}">
+                                    {{ attempt.score|floatformat:2 }}%
+                                </span>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if attempt.is_completed %}
+                                <span class="badge bg-success">Completed</span>
+                            {% else %}
+                                <span class="badge bg-warning">In Progress</span>
+                                <a href="{% url 'take_exam' attempt.exam.id %}" class="btn btn-sm btn-primary ms-2">Resume</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <p>You haven't taken any exams yet. <a href="{% url 'index' %}">Browser available exams</a> to get started.</p>
+    </div>
+{% endif %}
+{% endblock %}
