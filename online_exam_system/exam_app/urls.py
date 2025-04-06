@@ -13,10 +13,10 @@ urlpatterns = [
     path('categories/add/', views.CategoryCreateView.as_view(), name='add_category'),
 
     # Exam URLs
-    path('exam/add/', views.ExamCreateView.as_view(), name='add_exam'),
-    path('exam/<int:exam_id>/questions/add/', views.add_questions, name='add_questions'),
-    path('exam/questions/add/', views.add_questions, name='add_questions_latest'),
-    path('exam/<int:exam_id>/take/', views.take_exam, name='take_exam'),
-    path('exam/history/', views.exam_history, name='exam_history'),
+    path('exams/add/', views.ExamCreateView.as_view(), name='add_exam'),
+    path('exams/<int:exam_id>/questions/add/', views.add_questions, name='add_questions'),
+    path('exams/questions/add/', views.add_questions, name='add_questions_latest'),
+    path('exams/<int:exam_id>/take/', views.take_exam, name='take_exam'),
+    path('exams/history/', views.exam_history, name='exam_history'),
 
 ]
